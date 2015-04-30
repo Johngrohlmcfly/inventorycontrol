@@ -157,7 +157,7 @@ void addproducts(int a){
 
 		fflush(stdin);
 
- 		if(recepcion[a].presentacion=='caja' || recepcion[a].presentacion=='CAJA' ß||recepcion[a].presentacion=='Caja'){
+ 		if(recepcion[a].presentacion=='caja' || recepcion[a].presentacion=='CAJA' ||recepcion[a].presentacion=='Caja'){
 			printf("\nPiezas por caja: ");
 			scanf("%d",&recepcion[a].piezaPorCaja);
 

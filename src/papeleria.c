@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-void addproducts(int a[]);
+#define SIZE 10000
+
+void addproducts(int a);
 
 //struct para fechas de movimientos
 struct fecha {
@@ -17,6 +19,8 @@ struct fecha {
 
 //struct para recepcion de articulos
 struct articulos {
+	short flag;
+
 	char nombre[100];
 	char presentacion[10];
 
@@ -29,12 +33,14 @@ struct articulos {
 	float precioporcaja;
 
 	struct fecha frecepcion;
-} recepcion[10000] = {};
+} recepcion[SIZE];
 
 //struct para baja de articulos
 struct bajaart {
 	char nombre[100];
+
 	int numArticulo;
+
 	struct fecha fbaja;
 } bajas;
 
@@ -52,10 +58,9 @@ struct ventas {
 } movimientos;
 
 
-
-int main(int argc, char const *argv[]) {
+int main(void) {
 	int i, accion, count = 0; //, recepcion;
-	int posicion, ix;
+	int posicion = 0;
 
 	char continuar;
 
@@ -82,19 +87,36 @@ int main(int argc, char const *argv[]) {
 		} while(accion < 0 || accion > 3);
 	}
 
+	i = 0;
+
+	for(; i < SIZE; i++){
+		recepcion[i].flag = 0;
+	}
+
+	i = 0;
+
 	switch (accion){
 		case 1:
-	  	do{
+			while(recepcion[posicion].flag != 0){
 				posicion++;
-				ix++;
-			} while(recepcion[posicion]!=0);
+			}
 
-			continuar = 'y';
+			continuar='y';
 
-			addproducts(recepcion[10000]);
+			addproducts(posicion);
+			posicion++;
 
 			printf("\nDesea ingresar mas articulos??...(y/n)\n");
 			scanf("%c",&continuar);
+
+			while(continuar == 'y' || continuar == 'Y'){
+				addproducts(posicion);
+
+				printf("\nDesea ingresar mas articulos??...(y/n)\n");
+				scanf("%c",&continuar);
+
+				posicion++;
+			}
 			break;
 		case 2:
 			printf("\nHOLA MUNDO");
@@ -108,74 +130,73 @@ int main(int argc, char const *argv[]) {
 }
 
 //FUNCIONES y PROCEDIMIENTOS
-void addproducts(int a[]){
+void addproducts(int a){
 	FILE *ptrFile;
-	ptrFile=fopen("papeleria.dat","a");
+	ptrFile = fopen("papeleria.dat","a");
 
 	if(ptrFile!=NULL){
-
 	 	fflush(stdin);
 
 	 	printf("\nIntroduzca el nombre del producto: ");
 
-		fgets(recepcion[posicion].nombre);
+		fgets(recepcion[a].nombre);
 	 	fflush(stdin);
 
 		printf("\nIntroduzca el numero de item: ");
-	 	scanf("%d",&recepcion[posicion].numArticulo);
+	 	scanf("%d",&recepcion[a].numArticulo);
 
 		fflush(stdin);
 
 		printf("\nEn que presentacion?(caja/pieza): ");
 
-		fgets(recepcion[posicion].presentacion);
+		fgets(recepcion[a].presentacion);
 	 	fflush(stdin);
 
 		printf("\nCantidad recibida: ");
-	 	scanf("%d",&recepcion[posicion].cantidadRecibida);
+	 	scanf("%d",&recepcion[a].cantidadRecibida);
 
 		fflush(stdin);
 
- 		if(recepcion[posicion].presentacion=='caja' || recepcion[posicion].presentacion=='CAJA' ß||recepcion[posicion].presentacion=='Caja'){
+ 		if(recepcion[a].presentacion=='caja' || recepcion[a].presentacion=='CAJA' ß||recepcion[a].presentacion=='Caja'){
 			printf("\nPiezas por caja: ");
-			scanf("%d",&recepcion[posicion].piezaPorCaja);
+			scanf("%d",&recepcion[a].piezaPorCaja);
 
 			fflush(stdin);
 
-			recepcion[posicion].existencia = recepcion[posicion].cantidadRecibida*recepcion[posicion].piezaPorCaja;
+			recepcion[a].existencia = recepcion[a].cantidadRecibida*recepcion[a].piezaPorCaja;
 
 			printf("\nIntroduzca el precio del producto: ");
-			scanf("%f",&recepcion[posicion].precioporcaja);
+			scanf("%f",&recepcion[a].precioporcaja);
 
 			fflush(stdin);
 
-			recepcion[posicion].precioUnitario = recepcion[posicion].precioporcaja/recepcion[posicion].piezaPorCaja;
+			recepcion[a].precioUnitario = recepcion[a].precioporcaja/recepcion[a].piezaPorCaja;
 		}
 
 		printf("\nIntroduzca el precio del producto: ");
-		scanf("%f",&recepcion[posicion].precioUnitario);
+		scanf("%f",&recepcion[a].precioUnitario);
 		fflush(stdin);
 
 		printf("\nIntroduzca la fecha de recepcion: ");
 		printf("\nDia: ");
-		scanf("%d",&recepcion[posicion].frecepcion.dia);
+		scanf("%d",&recepcion[a].frecepcion.dia);
 
 		printf("\nMes: ");
-		scanf("%d",&recepcion[posicion].frecepcion.mes);
+		scanf("%d",&recepcion[a].frecepcion.mes);
 
 		printf("\nAnio: ");
-		scanf("%d",&recepcion[posicion].frecepcion.anio);
+		scanf("%d",&recepcion[a].frecepcion.anio);
 
 		printf("\nHora: ");
-		scanf("%d",&recepcion[posicion].frecepcion.hora);
+		scanf("%d",&recepcion[a].frecepcion.hora);
 
 		printf("\nMinuto: ");
-		scanf("%d",&recepcion[posicion].frecepcion.minuto);
+		scanf("%d",&recepcion[a].frecepcion.minuto);
 
 		printf("\nSegundo: ");
-		scanf("%d",&recepcion[posicion].frecepcion.segundo);
+		scanf("%d",&recepcion[a].frecepcion.segundo);
 
-		fwrite(&recepcion[posicion],sizeof(articulos),1,ptrFile);
+		fwrite(&recepcion[a],sizeof(articulos),1,ptrFile);
 
 		fclose(ptrFile);
 	} else {

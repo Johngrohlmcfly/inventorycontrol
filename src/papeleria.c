@@ -33,7 +33,7 @@ struct articulos {
 	float precioporcaja;
 
 	struct fecha frecepcion;
-} recepcion[SIZE];
+} recepcion[SIZE], ventas[SIZE];
 
 //struct para baja de articulos
 struct bajaart {
@@ -134,14 +134,17 @@ int main(void) {
 
 //FUNCIONES y PROCEDIMIENTOS
 void addproducts(int a){
+
+	int i, mark, flag;
+
 	FILE *ptrFile;
 	ptrFile = fopen("papeleria.dat","ab");
+
 
 	if(ptrFile!=NULL){
 	 	fflush(stdin);
 
 	 	printf("\nIntroduzca el nombre del producto: ");
-
 		//fgets(recepcion[a].nombre,sizeof(recepcion[a].nombre),stdin)
 		scanf("%s",recepcion[a].nombre);
 	 	//fflush(stdin);
@@ -245,6 +248,36 @@ void addproducts(int a){
 				printf("\nSegundo: ");
 				scanf("%d",&recepcion[a].frecepcion.segundo);
 			}while(recepcion[a].frecepcion.segundo>59 || recepcion[a].frecepcion.segundo<0);
+
+			//THIS PART ITS GOING TO SAVE THE DATA IN THE SALES STRUCTURE FOR CREATE AN ACUMULATE INVENTORY
+			//THE OTHER ARRAY ONE WILL BE SAVE THE HISTORY OF RECEPTIONS.
+
+			for(i=0;i==a;i++){
+				mark=strcmp(recepcion[a].nombre,ventas[i].nombre);
+				flag++;
+				if(mark==0)
+					break;
+			}
+
+			if(mark==0){
+				ventas[flag].nombre==recepcion[a].nombre;
+				ventas[flag].numArticulo==recepcion[a].numArticulo;
+				ventas[flag].existencia==ventas[flag].existencia+recepcion[a].existencia;
+				ventas[flag].precioporcaja==recepcion[a].precioporcaja;
+				ventas[flag].precioUnitario==recepcion[a].precioUnitario;
+				ventas[flag].piezaPorCaja==recepcion[a].piezaPorCaja;
+			}
+
+
+			else{
+				ventas[a].nombre==recepcion[a].nombre;
+				ventas[a].numArticulo==recepcion[a].numArticulo;
+				ventas[a].existencia==recepcion[a].existencia;
+				ventas[a].precioporcaja==recepcion[a].precioporcaja;
+				ventas[a].precioUnitario==recepcion[a].precioUnitario;
+				ventas[a].piezaPorCaja==recepcion[a].piezaPorCaja;
+
+			}
 
 			fwrite(&recepcion[a],sizeof(recepcion),1,ptrFile);
 

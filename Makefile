@@ -17,9 +17,9 @@ papeleria: $(ODIR)/$(OBJS)
 	gcc $(CFLAGS) -o $@ $^
 
 $(ODIR)/%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@  
+	$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean
 
 clean:
-	rm -f $(ODIR)/*.o *~
+	rm -f $(ODIR)/*.o *~ papeleria

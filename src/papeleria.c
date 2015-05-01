@@ -101,13 +101,16 @@ int main(void) {
 				posicion++;
 			}
 
-			continuar='y';
+			continuar = 'n';
 
 			addproducts(posicion);
 			posicion++;
 
 			printf("\nDesea ingresar mas articulos??...(y/n)\n");
-			scanf("%c",&continuar);
+			do {
+				continuar = getc(stdin);
+			} while(continuar != EOF && !(continuar == 'y' || continuar == 'Y' || continuar == 'n' || continuar == 'N'));
+
 
 			while(continuar == 'y' || continuar == 'Y'){
 				addproducts(posicion);

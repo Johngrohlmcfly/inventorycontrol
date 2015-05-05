@@ -6,6 +6,7 @@
 #define SIZE 10000
 
 void addproducts(int a);
+void downproducts(int a);
 
 //struct para fechas de movimientos
 struct fecha {
@@ -132,6 +133,11 @@ int main(void) {
 	return 0;
 }
 
+
+
+
+
+
 //FUNCIONES y PROCEDIMIENTOS
 void addproducts(int a){
 
@@ -213,7 +219,7 @@ void addproducts(int a){
 
 			fwrite(&recepcion[a],sizeof(recepcion),1,ptrFile);
 
-	}	else{
+	 } else {
 			printf("\nIntroduzca el precio del producto: ");
 			scanf("%f",&recepcion[a].precioUnitario);
 			fflush(stdin);
@@ -260,29 +266,29 @@ void addproducts(int a){
 			}
 
 			if(mark==0){
-				ventas[flag].nombre==recepcion[a].nombre;
-				ventas[flag].numArticulo==recepcion[a].numArticulo;
-				ventas[flag].existencia==ventas[flag].existencia+recepcion[a].existencia;
-				ventas[flag].precioporcaja==recepcion[a].precioporcaja;
-				ventas[flag].precioUnitario==recepcion[a].precioUnitario;
-				ventas[flag].piezaPorCaja==recepcion[a].piezaPorCaja;
+				strcpy(ventas[a].nombre,recepcion[a].nombre);
+				ventas[flag].numArticulo = recepcion[a].numArticulo;
+				ventas[flag].existencia = ventas[flag].existencia+recepcion[a].existencia;
+				ventas[flag].precioporcaja = recepcion[a].precioporcaja;
+				ventas[flag].precioUnitario = recepcion[a].precioUnitario;
+				ventas[flag].piezaPorCaja = recepcion[a].piezaPorCaja;
 			}
 
 
 			else{
-				ventas[a].nombre==recepcion[a].nombre;
-				ventas[a].numArticulo==recepcion[a].numArticulo;
-				ventas[a].existencia==recepcion[a].existencia;
-				ventas[a].precioporcaja==recepcion[a].precioporcaja;
-				ventas[a].precioUnitario==recepcion[a].precioUnitario;
-				ventas[a].piezaPorCaja==recepcion[a].piezaPorCaja;
+				strcpy(ventas[a].nombre,recepcion[a].nombre);
+				ventas[a].numArticulo = recepcion[a].numArticulo;
+				ventas[a].existencia = recepcion[a].existencia;
+				ventas[a].precioporcaja = recepcion[a].precioporcaja;
+				ventas[a].precioUnitario = recepcion[a].precioUnitario;
+				ventas[a].piezaPorCaja = recepcion[a].piezaPorCaja;
 
 			}
 
 			fwrite(&recepcion[a],sizeof(recepcion),1,ptrFile);
 
 		} fclose(ptrFile);
-	} else {
+ } else {
   	printf("Error en la apertura del archivo");
 	}
 	printf("\n");

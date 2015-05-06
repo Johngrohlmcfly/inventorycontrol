@@ -43,7 +43,7 @@ struct bajaart {
 	int numArticulo;
 
 	struct fecha fbaja;
-} bajas;
+} bajas[SIZE];
 
 //struct para registro de ventas
 struct ventas {
@@ -56,7 +56,7 @@ struct ventas {
 	float total;
 
 	struct fecha fventa;
-} movimientos;
+} movimientos[SIZE];
 
 
 int main(void) {
@@ -72,7 +72,7 @@ int main(void) {
 	printf("\n---------------------MENU---------------------\n");
 	printf("[RECEPCION DE PRODUCTOS]---------------------1\n");
 	printf("[BAJA DE PRODUCTOS]--------------------------2\n");
-	printf("[VENTA DE PRODUCTOS]-------------------------3\n");
+	printf("[VENTA DE PRODUCTOS]-------------------------3\n\n");
 	scanf("%d", &accion);
 
 	if(accion<0 || accion>3){
@@ -122,12 +122,33 @@ int main(void) {
 				posicion++;
 			}
 			break;
+
+
 		case 2:
-			printf("\nHOLA MUNDO");
+		continuar = 'n';
+
+			downproducts(1);
+
+			printf("\nDesea dar de baja mas articulos??...(y/n)\n");
+			do {
+				continuar = getc(stdin);
+			} while(continuar != EOF && !(continuar == 'y' || continuar == 'Y' || continuar == 'n' || continuar == 'N'));
+
+
+			while(continuar == 'y' || continuar == 'Y'){
+				downproducts(posicion);
+
+				printf("\nDesea dar de baja mas articulos??...(y/n)\n");
+				scanf("%c",&continuar);
+			}
 		break;
+
+
+
 		case 3:
 			printf("\nHOLA MUNDO");
 		break;
+
 	}
 
 	return 0;
@@ -151,8 +172,9 @@ void addproducts(int a){
 	 	fflush(stdin);
 
 	 	printf("\nIntroduzca el nombre del producto: ");
-		//fgets(recepcion[a].nombre,sizeof(recepcion[a].nombre),stdin)
-		scanf("%s",recepcion[a].nombre);
+		//fgets(recepcion[a].nombre,sizeof(recepcion[a].nombre),stdin);
+		fgets(recepcion[a].nombre,50,stdin);
+		//scanf("%s",recepcion[a].nombre);
 	 	//fflush(stdin);
 
 		printf("\nIntroduzca el numero de item: ");
@@ -291,5 +313,25 @@ void addproducts(int a){
  } else {
   	printf("Error en la apertura del archivo");
 	}
+	printf("\n");
+}
+
+
+void downproducts(int a){
+
+	FILE *ptrFile;
+	ptrFile = fopen("papeleria.dat","ab");
+
+
+		if(ptrFile!=NULL){
+			printf("\nIngrese el nombre del articulo que se dara de baja...:");
+			fgets(bajas[a].nombre,50,stdin);
+
+
+	fclose(ptrFile);
+	} else {
+  	printf("Error en la apertura del archivo");
+	}
+
 	printf("\n");
 }

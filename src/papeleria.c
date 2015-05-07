@@ -7,6 +7,7 @@
 
 void addproducts(int a);
 void downproducts(int a);
+void sales(int a);
 
 //struct para fechas de movimientos
 struct fecha {
@@ -49,6 +50,8 @@ struct bajaart {
 
 //struct para registro de ventas
 struct ventas {
+	short flag;
+
 	int cantidad;
 
 	float precio;
@@ -126,7 +129,7 @@ int main(void) {
 				posicion++;
 			}
 			break;
-	//FASE 2, MAKE AN DATABASE FOR DISCONTINUATED PRODUCTS		
+		//FASE 2, MAKE AN DATABASE FOR DISCONTINUATED PRODUCTS		
 		case 2:
 			while(bajas[posicion].flag != 0){
 				posicion++;
@@ -142,20 +145,41 @@ int main(void) {
 			} while(continuar != EOF && !(continuar == 'y' || continuar == 'Y' || continuar == 'n' || continuar == 'N'));
 
 			while(continuar == 'y' || continuar == 'Y'){
-				//downproducts(posicion);
 
 				printf("\nDesea dar de baja mas articulos??...(y/n)\n");
 				scanf("%c",&continuar);
 
-			continuar = 'n';
+				continuar = 'n';
 
-			downproducts(posicion);
-			posicion++;
+				downproducts(posicion);
+				posicion++;
 			}
 			break;
-
+		// FASE 3, SALES!, THIS PART GOING TO DISCOUNT THE PRODUCTS OF INVENTORY & CHECK IF THE ITEM ISNT DISCONTINUED
 		case 3:
-			printf("\nHOLA MUNDO");
+			while(movimientos[posicion].flag != 0){
+				posicion++;
+			}
+
+			continuar = 'n';
+
+			sales(posicion);
+
+			printf("\nDesea continuar??...(y/n)\n");
+			do {
+				continuar = getc(stdin);
+			} while(continuar != EOF && !(continuar == 'y' || continuar == 'Y' || continuar == 'n' || continuar == 'N'));
+
+			while(continuar == 'y' || continuar == 'Y'){
+
+				printf("\nDesea continuar??...(y/n)\n");
+				scanf("%c",&continuar);
+
+				continuar = 'n';
+
+				sales(posicion);
+				posicion++;
+			}
 			break;
 	}
 	return 0;
@@ -318,4 +342,10 @@ void downproducts(int a){
 	}
 
 	printf("\n");
+}
+
+
+void sales(int a){
+
+
 }

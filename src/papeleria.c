@@ -1,4 +1,4 @@
-//Made by <John Hernandez> <johnhndzr@gmail.com>
+//Made by <John Hernandez> <johnhndzr@gmail.com> & <Sinhue Valencia> <sierisimo@gmail.com>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -185,7 +185,7 @@ int main(void) {
 	return 0;
 }
 
-//FUNCIONES y PROCEDIMIENTOS
+//FUNCTIONS & PROCEDURES
 void addproducts(int a){
 	int i, mark, flag;
 
@@ -328,7 +328,11 @@ void addproducts(int a){
 }
 
 
+
 void downproducts(int a){
+	int i=0;
+	int flag;
+
 	FILE *ptrFile;
 	ptrFile = fopen("papeleria.dat","ab");
 
@@ -336,6 +340,42 @@ void downproducts(int a){
 		printf("\nIngrese el nombre del articulo que se dara de baja...:");
 		getchar();
 		fgets(bajas[a].nombre,100,stdin);
+		flag = strcmp(bajas[a].nombre,recepcion[i].nombre);
+		while(flag != 0){
+			i++;
+			flag = strcmp(bajas[a].nombre,recepcion[i].nombre);
+		}
+		bajas[a].numArticulo = recepcion[i].numArticulo;
+		printf("\nIntroduzca la fecha de baja: ");
+			do {
+				printf("\nDia: ");
+				scanf("%d",&bajas[a].fbaja.dia);
+			} while(bajas[a].fbaja.dia > 31 || bajas[a].fbaja.dia < 1);
+
+			do {
+				printf("\nMes: ");
+				scanf("%d", &bajas[a].fbaja.mes);
+			} while(bajas[a].fbaja.mes > 12 || bajas[a].fbaja.mes < 1);
+
+			//do{
+			printf("\nAnio: ");
+			scanf("%d",&bajas[a].fbaja.anio);
+			//}while(recepcion[a].frecepcion.anio>31);
+
+			do {
+				printf("\nHora: ");
+				scanf("%d", &bajas[a].fbaja.hora);
+			} while(bajas[a].fbaja.hora > 24 || bajas[a].fbaja.hora < 0);
+
+			do {
+				printf("\nMinuto: ");
+				scanf("%d", &bajas[a].fbaja.minuto);
+			} while(bajas[a].fbaja.minuto > 59 || bajas[a].fbaja.minuto < 0);
+
+			do{
+				printf("\nSegundo: ");
+				scanf("%d", &bajas[a].fbaja.segundo);
+			}while(bajas[a].fbaja.segundo > 59 || bajas[a].fbaja.segundo < 0);
 		fclose(ptrFile);
 	} else {
   	printf("Error en la apertura del archivo");
@@ -345,7 +385,21 @@ void downproducts(int a){
 }
 
 
-void sales(int a){
 
+
+void sales(int a){
+	FILE *ptrFile;
+	ptrFile = fopen("papeleria.dat","ab");
+
+	if(ptrFile != NULL) {
+		printf("\nNombre del articulo...:");
+		getchar();
+		fgets(bajas[a].nombre,100,stdin);
+		fclose(ptrFile);
+	} else {
+  	printf("Error en la apertura del archivo");
+	}
+
+	printf("\n");
 
 }

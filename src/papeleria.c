@@ -38,6 +38,8 @@ struct articulos {
 
 //struct para baja de articulos
 struct bajaart {
+	short flag;
+
 	char nombre[100];
 
 	int numArticulo;
@@ -99,6 +101,7 @@ int main(void) {
 	i = 0;
 
 	switch (accion){
+		//FASE 1 MAKE AN ARRAY FOR THE INVENTORY OF ALL PRODUCTS
 		case 1:
 			while(recepcion[posicion].flag != 0){
 				posicion++;
@@ -123,10 +126,15 @@ int main(void) {
 				posicion++;
 			}
 			break;
+	//FASE 2, MAKE AN DATABASE FOR DISCONTINUATED PRODUCTS		
 		case 2:
+			while(bajas[posicion].flag != 0){
+				posicion++;
+			}
+
 			continuar = 'n';
 
-			downproducts(1);
+			downproducts(posicion);
 
 			printf("\nDesea dar de baja mas articulos??...(y/n)\n");
 			do {
@@ -134,12 +142,18 @@ int main(void) {
 			} while(continuar != EOF && !(continuar == 'y' || continuar == 'Y' || continuar == 'n' || continuar == 'N'));
 
 			while(continuar == 'y' || continuar == 'Y'){
-				downproducts(posicion);
+				//downproducts(posicion);
 
 				printf("\nDesea dar de baja mas articulos??...(y/n)\n");
 				scanf("%c",&continuar);
+
+			continuar = 'n';
+
+			downproducts(posicion);
+			posicion++;
 			}
 			break;
+
 		case 3:
 			printf("\nHOLA MUNDO");
 			break;
@@ -296,7 +310,8 @@ void downproducts(int a){
 
 	if(ptrFile != NULL) {
 		printf("\nIngrese el nombre del articulo que se dara de baja...:");
-		fgets(bajas[a].nombre, 50, stdin);
+		getchar();
+		fgets(bajas[a].nombre,100,stdin);
 		fclose(ptrFile);
 	} else {
   	printf("Error en la apertura del archivo");

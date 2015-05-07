@@ -52,7 +52,10 @@ struct bajaart {
 struct ventas {
 	short flag;
 
+	char nombre[100];
+
 	int cantidad;
+	int numArticulo;
 
 	float precio;
 	float descuento;
@@ -331,7 +334,7 @@ void addproducts(int a){
 
 void downproducts(int a){
 	int i=0;
-	int flag;
+	int Flag;
 
 	FILE *ptrFile;
 	ptrFile = fopen("papeleria.dat","ab");
@@ -341,10 +344,10 @@ void downproducts(int a){
 		fflush(stdin);
 		getchar();
 		fgets(bajas[a].nombre,100,stdin);
-		flag = strcmp(bajas[a].nombre,recepcion[i].nombre);
-		while(flag != 0){
+		Flag = strcmp(bajas[a].nombre,recepcion[i].nombre);
+		while(Flag != 0){
 			i++;
-			flag = strcmp(bajas[a].nombre,recepcion[i].nombre);
+			Flag = strcmp(bajas[a].nombre,recepcion[i].nombre);
 		}
 		bajas[a].numArticulo = recepcion[i].numArticulo;
 		printf("\nIntroduzca la fecha de baja: ");
@@ -389,13 +392,38 @@ void downproducts(int a){
 
 
 void sales(int a){
+	int i=0;
+	int Flag, Flag2;
+
 	FILE *ptrFile;
 	ptrFile = fopen("papeleria.dat","ab");
 
 	if(ptrFile != NULL) {
-		printf("\nNombre del articulo...:");
+		printf("\nIngrese el nombre del articulo..: ");
+		fflush(stdin);
 		getchar();
-		fgets(bajas[a].nombre,100,stdin);
+		fgets(movimientos[a].nombre,100,stdin);
+		Flag = strcmp(movimientos[a].nombre,recepcion[i].nombre);
+		while(Flag != 0){
+			i++;
+			Flag = strcmp(movimientos[a].nombre,recepcion[i].nombre);
+		}
+		Flag2 = strcmp(movimientos[a].nombre,recepcion[i].nombre);
+		while(Flag2 != 0){
+			i++;
+			Flag2 = strcmp(movimientos[a].nombre,bajas[i].nombre);
+		}
+		if(Flag2==0){
+			printf("\nEl producto esta descontinuado...\n\n");
+			break;
+		}
+		movimientos[a].numArticulo = recepcion[i].numArticulo;
+		printf("\nCantidad...:");
+		scanf("%d",&movimientos[a].cantidad);
+
+
+
+
 		fclose(ptrFile);
 	} else {
   	printf("Error en la apertura del archivo");

@@ -337,7 +337,8 @@ void downproducts(int a){
 	ptrFile = fopen("papeleria.dat","ab");
 
 	if(ptrFile != NULL) {
-		printf("\nIngrese el nombre del articulo que se dara de baja...:");
+		printf("\nIngrese el nombre del articulo que se dara de baja...: ");
+		fflush(stdin);
 		getchar();
 		fgets(bajas[a].nombre,100,stdin);
 		flag = strcmp(bajas[a].nombre,recepcion[i].nombre);

@@ -6,7 +6,7 @@
 #define SIZE 10000
 
 void addproducts(int a);
-void downproducts(int a);
+void downproducts();
 void sales(int a);
 
 //struct para fechas de movimientos
@@ -135,13 +135,14 @@ int main(void) {
 			break;
 		//FASE 2, MAKE AN DATABASE FOR DISCONTINUATED PRODUCTS		
 		case 2:
+		//ESTE APROACH DEBE IRSE DENTRO DEL PROCEDIMIENTO
 			while(bajas[posicion].flag != 0){
 				posicion++;
 			}
 
 			continuar = 'n';
 
-			downproducts(posicion);
+			downproducts();
 
 			printf("\nDesea dar de baja mas articulos??...(y/n)\n");
 			do {
@@ -333,14 +334,16 @@ void addproducts(int a){
 
 
 
-void downproducts(int a){
+void downproducts(){
 	int i=0;
-	int Flag;
+	int Flag, a=0;
 
 	FILE *ptrFile;
 	ptrFile = fopen("papeleria.dat","ab");
 
 	if(ptrFile != NULL) {
+		printf("VALOR-----------%d\n",a );
+		//fread(&recepcionAux,sizeof(recepcion),1,ptrFile);
 		printf("\nIngrese el nombre del articulo que se dara de baja...: ");
 		fflush(stdin);
 		getchar();

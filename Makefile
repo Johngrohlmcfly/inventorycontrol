@@ -1,22 +1,27 @@
 #Single makefile
+vpath %.c src
 
-SRC_PROJ=papeleria.c
+SRC_PROJ=addproducts.c downproducts.c sales.c papeleria.c
 
 ODIR=obj
 
-OBJS=papeleria.o
+OBJS=$(patsubst %.c, $(ODIR)/%.o, $(SRC_PROJ))
 
 CC=gcc
-CFLAGS=-Wall -Wextra
-
-vpath %.c src
+CFLAGS=-Wall -Wextra -I lib
+#vpath %.o obj
 
 all: papeleria
 
-papeleria: $(ODIR)/$(OBJS)
-	gcc $(CFLAGS) -o $@ $^
+$(OBJS): | obj
 
-$(ODIR)/%.o: %.c
+obj:
+	@mkdir -p $@
+
+papeleria: $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^
+
+obj/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean

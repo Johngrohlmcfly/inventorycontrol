@@ -5,7 +5,7 @@ void downproducts(){
 	int Flag, a = 0;
 
 	FILE *ptrFile;
-	ptrFile = fopen("papeleria.dat","ab");
+	ptrFile = fopen("papeleria.dat","rb");
 
 	if(ptrFile != NULL) {
 		printf("\nIngrese el nombre del articulo que se dara de baja...: ");
@@ -14,10 +14,11 @@ void downproducts(){
 		getchar();
 		fgets(bajas[a].nombre,100,stdin);
 
+		fread(&recepcion, sizeof(recepcion[i]), SIZE, ptrFile);
+
 		Flag = strcmp(bajas[a].nombre,recepcion[i].nombre);
 		while(Flag != 0){
 			i++;
-			printf("Corriendo %d\n", i);
 			Flag = strcmp(bajas[a].nombre,recepcion[i].nombre);
 		}
 		bajas[a].numArticulo = recepcion[i].numArticulo;

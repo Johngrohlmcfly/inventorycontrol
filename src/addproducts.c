@@ -67,7 +67,7 @@ void addproducts(int a){
 				scanf("%d", &recepcion[a].frecepcion.segundo);
 			} while(recepcion[a].frecepcion.segundo > 59 || recepcion[a].frecepcion.segundo < 0);
 
-			fwrite(&recepcion[a], sizeof(recepcion), 1, ptrFile);
+			fwrite(&recepcion, sizeof(recepcion[a]), SIZE, ptrFile);
 	 } else {
 			printf("\nIntroduzca el precio del producto: ");
 			scanf("%f", &recepcion[a].precioUnitario);
@@ -133,7 +133,7 @@ void addproducts(int a){
 				ventas[a].piezaPorCaja = recepcion[a].piezaPorCaja;
 			}
 
-			fwrite(&recepcion[a],sizeof(recepcion),1,ptrFile);
+			fwrite(&recepcion, sizeof(recepcion[a]), SIZE, ptrFile);
 		}
 		fclose(ptrFile);
  	} else {

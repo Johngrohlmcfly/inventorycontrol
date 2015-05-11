@@ -75,7 +75,7 @@ int main(void) {
 	printf("[VENTA DE PRODUCTOS]-------------------------3\n");
 	scanf("%d", &accion);
 
-	if(accion<0 || accion>3){
+	if(accion < 0 || accion > 3){
 		do {
 			count++;
 			printf("\nSeleccion invalida, ingresa un numero valido del menu....\n");
@@ -141,7 +141,7 @@ int main(void) {
 //FUNCIONES y PROCEDIMIENTOS
 void addproducts(int a){
 
-	int i, mark, flag;
+	int i, mark, flag = 0;
 
 	FILE *ptrFile;
 	ptrFile = fopen("papeleria.dat","ab");
@@ -272,22 +272,18 @@ void addproducts(int a){
 				ventas[flag].precioporcaja = recepcion[a].precioporcaja;
 				ventas[flag].precioUnitario = recepcion[a].precioUnitario;
 				ventas[flag].piezaPorCaja = recepcion[a].piezaPorCaja;
-			}
-
-
-			else{
+			} else {
 				strcpy(ventas[a].nombre,recepcion[a].nombre);
 				ventas[a].numArticulo = recepcion[a].numArticulo;
 				ventas[a].existencia = recepcion[a].existencia;
 				ventas[a].precioporcaja = recepcion[a].precioporcaja;
 				ventas[a].precioUnitario = recepcion[a].precioUnitario;
 				ventas[a].piezaPorCaja = recepcion[a].piezaPorCaja;
-
 			}
 
 			fwrite(&recepcion[a],sizeof(recepcion),1,ptrFile);
-
-		} fclose(ptrFile);
+		}
+		fclose(ptrFile);
  } else {
   	printf("Error en la apertura del archivo");
 	}

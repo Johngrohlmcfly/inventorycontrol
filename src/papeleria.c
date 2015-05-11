@@ -1,4 +1,4 @@
-//Made by <John Hernandez> <johnhndzr@gmail.com>
+//Made by <John Hernandez> <johnhndzr@gmail.com> & <Sinhue Valencia> <sierisimo@gmail.com>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +6,8 @@
 #define SIZE 10000
 
 void addproducts(int a);
-void downproducts(int a);
+void downproducts();
+void sales(int a);
 
 //struct para fechas de movimientos
 struct fecha {
@@ -38,25 +39,33 @@ struct articulos {
 
 //struct para baja de articulos
 struct bajaart {
+	short flag;
+
 	char nombre[100];
 
 	int numArticulo;
 
 	struct fecha fbaja;
-} bajas;
+} bajas[SIZE];
 
 //struct para registro de ventas
 struct ventas {
+	short flag;
+
+	char nombre[100];
+
 	int cantidad;
+	int numArticulo;
 
 	float precio;
+	float monto;
 	float descuento;
 	float iva;
 	float subtotal;
 	float total;
 
 	struct fecha fventa;
-} movimientos;
+} movimientos[SIZE];
 
 
 int main(void) {
@@ -72,7 +81,9 @@ int main(void) {
 	printf("\n---------------------MENU---------------------\n");
 	printf("[RECEPCION DE PRODUCTOS]---------------------1\n");
 	printf("[BAJA DE PRODUCTOS]--------------------------2\n");
-	printf("[VENTA DE PRODUCTOS]-------------------------3\n");
+	printf("[VENTA DE PRODUCTOS]-------------------------3\n\n");
+	printf("Su seleccion: ");
+
 	scanf("%d", &accion);
 
 	if(accion < 0 || accion > 3){
@@ -81,7 +92,7 @@ int main(void) {
 			printf("\nSeleccion invalida, ingresa un numero valido del menu....\n");
 			scanf("%d", &accion);
 
-			if(count==5){
+			if(count == 5){
 				printf("\nERROR EN LA EJECUCION, -----FIN DEL PROGRAMA-----\n\n");
 				break;
 			}
@@ -97,6 +108,7 @@ int main(void) {
 	i = 0;
 
 	switch (accion){
+		//FASE 1 MAKE AN ARRAY FOR THE INVENTORY OF ALL PRODUCTS
 		case 1:
 			while(recepcion[posicion].flag != 0){
 				posicion++;
@@ -112,7 +124,6 @@ int main(void) {
 				continuar = getc(stdin);
 			} while(continuar != EOF && !(continuar == 'y' || continuar == 'Y' || continuar == 'n' || continuar == 'N'));
 
-
 			while(continuar == 'y' || continuar == 'Y'){
 				addproducts(posicion);
 
@@ -122,38 +133,74 @@ int main(void) {
 				posicion++;
 			}
 			break;
+		//FASE 2, MAKE AN DATABASE FOR DISCONTINUATED PRODUCTS
 		case 2:
-			printf("\nHOLA MUNDO");
-		break;
-		case 3:
-			printf("\nHOLA MUNDO");
-		break;
-	}
+		//ESTE APROACH DEBE IRSE DENTRO DEL PROCEDIMIENTO
+			while(bajas[posicion].flag != 0){
+				posicion++;
+			}
 
+			continuar = 'n';
+
+			downproducts();
+
+			printf("\nDesea dar de baja mas articulos??...(y/n)\n");
+			do {
+				continuar = getc(stdin);
+			} while(continuar != EOF && !(continuar == 'y' || continuar == 'Y' || continuar == 'n' || continuar == 'N'));
+
+			while(continuar == 'y' || continuar == 'Y'){
+
+				printf("\nDesea dar de baja mas articulos??...(y/n)\n");
+				scanf("%c",&continuar);
+
+				continuar = 'n';
+
+				downproducts(posicion);
+				posicion++;
+			}
+			break;
+		// FASE 3, SALES!, THIS PART GOING TO DISCOUNT THE PRODUCTS OF INVENTORY & CHECK IF THE ITEM ISNT DISCONTINUED
+		case 3:
+			while(movimientos[posicion].flag != 0){
+				posicion++;
+			}
+
+			continuar = 'n';
+
+			sales(posicion);
+
+			printf("\nDesea continuar??...(y/n)\n");
+			do {
+				continuar = getc(stdin);
+			} while(continuar != EOF && !(continuar == 'y' || continuar == 'Y' || continuar == 'n' || continuar == 'N'));
+
+			while(continuar == 'y' || continuar == 'Y'){
+
+				printf("\nDesea continuar??...(y/n)\n");
+				scanf("%c",&continuar);
+
+				continuar = 'n';
+
+				sales(posicion);
+				posicion++;
+			}
+			break;
+	}
 	return 0;
 }
 
-
-
-
-
-
-//FUNCIONES y PROCEDIMIENTOS
+//FUNCTIONS & PROCEDURES
 void addproducts(int a){
-
 	int i, mark, flag = 0;
 
 	FILE *ptrFile;
 	ptrFile = fopen("papeleria.dat","ab");
 
-
-	if(ptrFile!=NULL){
-	 	fflush(stdin);
-
+	if(ptrFile != NULL){
 	 	printf("\nIntroduzca el nombre del producto: ");
-		//fgets(recepcion[a].nombre,sizeof(recepcion[a].nombre),stdin)
-		scanf("%s",recepcion[a].nombre);
-	 	//fflush(stdin);
+		getchar();
+		fgets(recepcion[a].nombre,100,stdin);
 
 		printf("\nIntroduzca el numero de item: ");
 	 	scanf("%d",&recepcion[a].numArticulo);
@@ -164,116 +211,112 @@ void addproducts(int a){
 
 		//fgets(recepcion[a].presentacion,sizeof(recepcion[a].presentacion),stdin);
 		scanf("%s",recepcion[a].presentacion);
-	 	fflush(stdin);
 
 		printf("\nCantidad recibida: ");
 	 	scanf("%d",&recepcion[a].cantidadRecibida);
 
-		fflush(stdin);
-
  		if(strcmp("caja",recepcion[a].presentacion)==0 || strcmp("Caja",recepcion[a].presentacion)==0 ||strcmp("CAJA",recepcion[a].presentacion)==0){
 			printf("\nPiezas por caja: ");
 			scanf("%d",&recepcion[a].piezaPorCaja);
-
-			fflush(stdin);
 
 			recepcion[a].existencia = recepcion[a].cantidadRecibida*recepcion[a].piezaPorCaja;
 
 			printf("\nIntroduzca el precio del producto(por caja): ");
 			scanf("%f",&recepcion[a].precioporcaja);
 
-			fflush(stdin);
-
 			recepcion[a].precioUnitario = recepcion[a].precioporcaja/recepcion[a].piezaPorCaja;
 
 			printf("\nIntroduzca la fecha de recepcion: ");
-			do{
+
+			do {
 				printf("\nDia: ");
 				scanf("%d",&recepcion[a].frecepcion.dia);
-			}while(recepcion[a].frecepcion.dia>31 || recepcion[a].frecepcion.dia<1);
+			} while(recepcion[a].frecepcion.dia > 31 || recepcion[a].frecepcion.dia < 1);
 
-			do{
+			do {
 				printf("\nMes: ");
 				scanf("%d",&recepcion[a].frecepcion.mes);
-			}while(recepcion[a].frecepcion.mes>12 || recepcion[a].frecepcion.mes<1);
+			} while(recepcion[a].frecepcion.mes > 12 || recepcion[a].frecepcion.mes < 1);
 
 			//do{
-				printf("\nAnio: ");
-				scanf("%d",&recepcion[a].frecepcion.anio);
+			printf("\nAnio: ");
+			scanf("%d",&recepcion[a].frecepcion.anio);
 			//}while(recepcion[a].frecepcion.anio>31);
 
-			do{
+			do {
 				printf("\nHora: ");
-				scanf("%d",&recepcion[a].frecepcion.hora);
-			}while(recepcion[a].frecepcion.hora>24 || recepcion[a].frecepcion.hora<0);
+				scanf("%d", &recepcion[a].frecepcion.hora);
+			} while(recepcion[a].frecepcion.hora > 24 || recepcion[a].frecepcion.hora < 0);
 
-			do{
+			do {
 				printf("\nMinuto: ");
 				scanf("%d",&recepcion[a].frecepcion.minuto);
-			}while(recepcion[a].frecepcion.minuto>59 || recepcion[a].frecepcion.minuto<0);
+			} while(recepcion[a].frecepcion.minuto > 59 || recepcion[a].frecepcion.minuto < 0);
 
-			do{
+			do {
 				printf("\nSegundo: ");
-				scanf("%d",&recepcion[a].frecepcion.segundo);
-			}while(recepcion[a].frecepcion.segundo>59 || recepcion[a].frecepcion.segundo<0);
+				scanf("%d", &recepcion[a].frecepcion.segundo);
+			} while(recepcion[a].frecepcion.segundo > 59 || recepcion[a].frecepcion.segundo < 0);
 
-			fwrite(&recepcion[a],sizeof(recepcion),1,ptrFile);
-
+			fwrite(&recepcion[a], sizeof(recepcion), 1, ptrFile);
 	 } else {
 			printf("\nIntroduzca el precio del producto: ");
-			scanf("%f",&recepcion[a].precioUnitario);
+			scanf("%f", &recepcion[a].precioUnitario);
 			fflush(stdin);
 
 			printf("\nIntroduzca la fecha de recepcion: ");
-			do{
+			do {
 				printf("\nDia: ");
 				scanf("%d",&recepcion[a].frecepcion.dia);
-			}while(recepcion[a].frecepcion.dia>31 || recepcion[a].frecepcion.dia<1);
+			} while(recepcion[a].frecepcion.dia > 31 || recepcion[a].frecepcion.dia < 1);
 
-			do{
+			do {
 				printf("\nMes: ");
-				scanf("%d",&recepcion[a].frecepcion.mes);
-			}while(recepcion[a].frecepcion.mes>12 || recepcion[a].frecepcion.mes<1);
+				scanf("%d", &recepcion[a].frecepcion.mes);
+			} while(recepcion[a].frecepcion.mes > 12 || recepcion[a].frecepcion.mes < 1);
 
 			//do{
-				printf("\nAnio: ");
-				scanf("%d",&recepcion[a].frecepcion.anio);
+			printf("\nAnio: ");
+			scanf("%d",&recepcion[a].frecepcion.anio);
 			//}while(recepcion[a].frecepcion.anio>31);
 
-			do{
+			do {
 				printf("\nHora: ");
-				scanf("%d",&recepcion[a].frecepcion.hora);
-			}while(recepcion[a].frecepcion.hora>24 || recepcion[a].frecepcion.hora<0);
+				scanf("%d", &recepcion[a].frecepcion.hora);
+			} while(recepcion[a].frecepcion.hora > 24 || recepcion[a].frecepcion.hora < 0);
 
-			do{
+			do {
 				printf("\nMinuto: ");
-				scanf("%d",&recepcion[a].frecepcion.minuto);
-			}while(recepcion[a].frecepcion.minuto>59 || recepcion[a].frecepcion.minuto<0);
+				scanf("%d", &recepcion[a].frecepcion.minuto);
+			} while(recepcion[a].frecepcion.minuto > 59 || recepcion[a].frecepcion.minuto < 0);
 
 			do{
 				printf("\nSegundo: ");
-				scanf("%d",&recepcion[a].frecepcion.segundo);
-			}while(recepcion[a].frecepcion.segundo>59 || recepcion[a].frecepcion.segundo<0);
+				scanf("%d", &recepcion[a].frecepcion.segundo);
+			}while(recepcion[a].frecepcion.segundo > 59 || recepcion[a].frecepcion.segundo < 0);
 
 			//THIS PART ITS GOING TO SAVE THE DATA IN THE SALES STRUCTURE FOR CREATE AN ACUMULATE INVENTORY
 			//THE OTHER ARRAY ONE WILL BE SAVE THE HISTORY OF RECEPTIONS.
 
-			for(i=0;i==a;i++){
-				mark=strcmp(recepcion[a].nombre,ventas[i].nombre);
+			for(i=0; i==a; i++) {
+				mark = strcmp(recepcion[a].nombre, ventas[i].nombre);
 				flag++;
-				if(mark==0)
+				if(mark==0){
 					break;
+				}
 			}
 
-			if(mark==0){
-				strcpy(ventas[a].nombre,recepcion[a].nombre);
+			if (mark == 0) {
+				strcpy(ventas[a].nombre, recepcion[a].nombre);
+
 				ventas[flag].numArticulo = recepcion[a].numArticulo;
 				ventas[flag].existencia = ventas[flag].existencia+recepcion[a].existencia;
 				ventas[flag].precioporcaja = recepcion[a].precioporcaja;
 				ventas[flag].precioUnitario = recepcion[a].precioUnitario;
 				ventas[flag].piezaPorCaja = recepcion[a].piezaPorCaja;
 			} else {
-				strcpy(ventas[a].nombre,recepcion[a].nombre);
+				strcpy(ventas[a].nombre, recepcion[a].nombre);
+
 				ventas[a].numArticulo = recepcion[a].numArticulo;
 				ventas[a].existencia = recepcion[a].existencia;
 				ventas[a].precioporcaja = recepcion[a].precioporcaja;
@@ -284,8 +327,151 @@ void addproducts(int a){
 			fwrite(&recepcion[a],sizeof(recepcion),1,ptrFile);
 		}
 		fclose(ptrFile);
- } else {
+ 	} else {
   	printf("Error en la apertura del archivo");
 	}
+	printf("\n");
+}
+
+void downproducts(){
+	int i = 0;
+	int Flag, a = 0;
+
+	FILE *ptrFile;
+	ptrFile = fopen("papeleria.dat","ab");
+
+	if(ptrFile != NULL) {
+		printf("VALOR-----------%d\n",a );
+		//fread(&recepcionAux,sizeof(recepcion),1,ptrFile);
+		printf("\nIngrese el nombre del articulo que se dara de baja...: ");
+		fflush(stdin);
+		getchar();
+		fgets(bajas[a].nombre,100,stdin);
+		Flag = strcmp(bajas[a].nombre,recepcion[i].nombre);
+		while(Flag != 0){
+			i++;
+			Flag = strcmp(bajas[a].nombre,recepcion[i].nombre);
+		}
+		bajas[a].numArticulo = recepcion[i].numArticulo;
+		printf("\nIntroduzca la fecha de baja: ");
+			do {
+				printf("\nDia: ");
+				scanf("%d",&bajas[a].fbaja.dia);
+			} while(bajas[a].fbaja.dia > 31 || bajas[a].fbaja.dia < 1);
+
+			do {
+				printf("\nMes: ");
+				scanf("%d", &bajas[a].fbaja.mes);
+			} while(bajas[a].fbaja.mes > 12 || bajas[a].fbaja.mes < 1);
+
+			//do{
+			printf("\nAnio: ");
+			scanf("%d",&bajas[a].fbaja.anio);
+			//}while(recepcion[a].frecepcion.anio>31);
+
+			do {
+				printf("\nHora: ");
+				scanf("%d", &bajas[a].fbaja.hora);
+			} while(bajas[a].fbaja.hora > 24 || bajas[a].fbaja.hora < 0);
+
+			do {
+				printf("\nMinuto: ");
+				scanf("%d", &bajas[a].fbaja.minuto);
+			} while(bajas[a].fbaja.minuto > 59 || bajas[a].fbaja.minuto < 0);
+
+			do{
+				printf("\nSegundo: ");
+				scanf("%d", &bajas[a].fbaja.segundo);
+			}while(bajas[a].fbaja.segundo > 59 || bajas[a].fbaja.segundo < 0);
+		fclose(ptrFile);
+	} else {
+  	printf("Error en la apertura del archivo");
+	}
+
+	printf("\n");
+}
+
+void sales(int a){
+	int i=0;
+	int Flag, Flag2;
+
+	FILE *ptrFile;
+	ptrFile = fopen("papeleria.dat","ab");
+
+	if(ptrFile != NULL) {
+		printf("\nIngrese el nombre del articulo..: ");
+		fflush(stdin);
+		getchar();
+		fgets(movimientos[a].nombre,100,stdin);
+		Flag = strcmp(movimientos[a].nombre,ventas[i].nombre);
+		while(Flag != 0){
+			i++;
+			Flag = strcmp(movimientos[a].nombre,ventas[i].nombre);
+		}
+		Flag2 = strcmp(movimientos[a].nombre,ventas[i].nombre);
+		while(Flag2 != 0){
+			i++;
+			Flag2 = strcmp(movimientos[a].nombre,bajas[i].nombre);
+		}
+		if(Flag2==0){
+			printf("\nEl producto esta descontinuado...\n\n");
+			//break;
+		}
+		printf("\nCantidad...:");
+		scanf("%d",&movimientos[a].cantidad);
+
+		movimientos[a].numArticulo = ventas[i].numArticulo;
+		movimientos[a].precio = ventas[i].precioUnitario;
+		movimientos[a].monto = movimientos[a].precio*movimientos[a].cantidad;
+		movimientos[a].iva = movimientos[a].monto*0.16;
+/*
+		if(movimientos[a].cantidad ==){
+		movimientos[a].descuento = ventas[i].numArticulo;
+		}else if(){
+
+		}else if(){
+
+		}
+
+		movimientos[a].subtotal = movimientos[a].monto - movimientos[a].descuento;
+		movimientos[a].total = movimientos[a].subtotal + movimientos[a].ivat;
+*/
+		printf("\nIntroduzca la fecha: ");
+			do {
+				printf("\nDia: ");
+				scanf("%d",&movimientos[a].fventa.dia);
+			} while(movimientos[a].fventa.dia > 31 || movimientos[a].fventa.dia < 1);
+
+			do {
+				printf("\nMes: ");
+				scanf("%d", &movimientos[a].fventa.mes);
+			} while(movimientos[a].fventa.mes > 12 || movimientos[a].fventa.mes < 1);
+
+			//do{
+			printf("\nAnio: ");
+			scanf("%d",&movimientos[a].fventa.anio);
+			//}while(recepcion[a].frecepcion.anio>31);
+
+			do {
+				printf("\nHora: ");
+				scanf("%d", &movimientos[a].fventa.hora);
+			} while(movimientos[a].fventa.hora > 24 || movimientos[a].fventa.hora < 0);
+
+			do {
+				printf("\nMinuto: ");
+				scanf("%d", &movimientos[a].fventa.minuto);
+			} while(movimientos[a].fventa.minuto > 59 || movimientos[a].fventa.minuto < 0);
+
+			do{
+				printf("\nSegundo: ");
+				scanf("%d", &movimientos[a].fventa.segundo);
+			}while(movimientos[a].fventa.segundo > 59 || movimientos[a].fventa.segundo < 0);
+
+
+		fclose(ptrFile);
+	} else {
+  	printf("Error en la apertura del archivo");
+	}
+
 	printf("\n");
 }

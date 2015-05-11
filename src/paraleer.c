@@ -29,7 +29,7 @@ struct articulos {
 	float precioporcaja;
 
 	struct fecha frecepcion;
-} recepcion[SIZE], recepcionAux;
+} recepcion[SIZE], recepcionAux, ventas[SIZE];
 
 
 
